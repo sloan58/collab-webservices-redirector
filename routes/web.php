@@ -19,7 +19,7 @@ Route::get('/', function () {
 });
 
 Route::get('/test', function() {
-    $baseUri = 'https://10.175.200.10/ucmuser';
+    $baseUri = 'https://hq-ucm-pub.karmatek.io/ucmuser';
 
     $client = new Client([
         'timeout'  => 20.0,
@@ -43,8 +43,8 @@ Route::get('/test', function() {
         ],
         'headers' => [
             'Content-Type' => 'application/x-www-form-urlencoded',
-            'Referer' => 'https://10.175.200.10/ucmuser',
-            'Origin' => 'https://10.175.200.10',
+            'Referer' => 'https://hq-ucm-pub.karmatek.io/ucmuser',
+            'Origin' => 'https://hq-ucm-pub.karmatek.io',
             'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
             'Cookie' => $jSessionId,
 //                'Connection' => 'keep-alive',
@@ -66,6 +66,8 @@ Route::get('/test', function() {
 
     info('body', $response->getBody());
     info('status', $response->getStatusCode());
-    
-    return response(null, 302)->withCookie(cookie('Cookie', $jSessionId));
+
+    return redirect($baseUri, 302, [
+        'Set-Cookie' => "$jSessionId; Domain=.karmatek.io; Secure; HttpOnly; path=/"
+    ])->withCookie(cookie('Cookie', $jSessionId));
 });
